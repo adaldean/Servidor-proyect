@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Favoritos - Geo-Explorador Pro</title>
+    <script>
+        (function () {
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" href="/static/style_f.css">
+</head>
+<body>
+<div class="card">
+    <div class="page-header">
+        <h1>Paises Favoritos</h1>
+        <div class="header-actions">
+            <button id="theme-toggle" class="btn theme-toggle" type="button" aria-label="Cambiar tema">Tema</button>
+            <button id="back-btn" class="btn back">Volver</button>
+        </div>
+    </div>
+
+    <div id="content">
+        <div class="empty">Cargando favoritos…</div>
+    </div>
+</div>
+
+<script src="/static/script_f.js"></script>
+</body>
+</html>

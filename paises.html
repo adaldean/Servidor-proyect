@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo-Explorador Pro</title>
+    <script>
+        (function () {
+            var theme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+    <link rel="stylesheet" href="/static/style_p.css">
+<script src="/static/script_p.js" defer></script>
+
+</head>
+<body>
+<div class="app">
+    <aside class="sidebar">
+        <h3>Información</h3>
+        <div class="item">
+            <div class="label" id="fav-header" style="cursor:pointer;">Favoritos ▾</div>
+            <div id="favorites-list" class="favorites-list">
+                <div class="empty">No hay favoritos</div>
+            </div>
+            <button id="open-favs-page" class="open-favs-btn" style="display:none">Ver países favoritos</button>
+        </div>
+        <div class="item">
+            <div class="label">Continente</div>
+            <div id="continent">—</div>
+        </div>
+        <div class="item">
+            <div class="label">Población</div>
+            <div id="population">—</div>
+        </div>
+        <div class="item">
+            <div class="label">Idiomas</div>
+            <div id="languages">—</div>
+        </div>
+    </aside>
+
+    <main class="card">
+        <div class="title-row">
+            <h2>Explorador del Mundo</h2>
+            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">Tema</button>
+        </div>
+        <p id="loader">Cargando base de datos...</p>
+        
+        <div style="display:flex;gap:8px;align-items:center;">
+            <select id="country-select" style="display:none;flex:1"></select>
+            <button id="fav-btn" class="fav-btn" title="Marcar como favorito" disabled>☆ Favorito</button>
+        </div>
+
+        <div id="info-panel" class="result-grid">
+            <div class="flag-box">
+                <img id="flag" src="" alt="Bandera">
+            </div>
+            <h1 id="name" class="country-name"></h1>
+            <div id="currency" class="badge"></div>
+            
+            <div class="map-container">
+                <iframe id="map-frame" src="" title="Mapa del país seleccionado"></iframe>
+            </div>
+        </div>
+    </main>
+</div>
+
+</body>
+</html>
