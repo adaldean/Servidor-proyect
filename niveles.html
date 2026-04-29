@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleccionar Nivel Educativo - Geo-Explorador Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 50px 30px;
+            max-width: 900px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .container {
+            background: #2a2a3e;
+            color: #e0e0e0;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        body.dark-mode .header h1 {
+            color: #a0aec0;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        body.dark-mode .header p {
+            color: #cbd5e0;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .level-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            padding: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .level-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .level-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: left 0.3s ease;
+        }
+
+        .level-card:hover::before {
+            left: 100%;
+        }
+
+        .level-card.primaria {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        .level-card.primaria:hover {
+            box-shadow: 0 20px 40px rgba(76, 175, 80, 0.4);
+        }
+
+        .level-card.secundaria {
+            background: linear-gradient(135deg, #2196F3 0%, #0b7dda 100%);
+        }
+
+        .level-card.secundaria:hover {
+            box-shadow: 0 20px 40px rgba(33, 150, 243, 0.4);
+        }
+
+        .level-card.universidad {
+            background: linear-gradient(135deg, #FF9800 0%, #e68900 100%);
+        }
+
+        .level-card.universidad:hover {
+            box-shadow: 0 20px 40px rgba(255, 152, 0, 0.4);
+        }
+
+        .level-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .level-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-description {
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-features {
+            text-align: left;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-features li {
+            list-style: none;
+            margin: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .level-features li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .level-btn {
+            background: white;
+            color: #333;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            z-index: 1;
+        }
+
+        .level-card.primaria .level-btn {
+            color: #4CAF50;
+        }
+
+        .level-card.secundaria .level-btn {
+            color: #2196F3;
+        }
+
+        .level-card.universidad .level-btn {
+            color: #FF9800;
+        }
+
+        .level-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ddd;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        body.dark-mode .theme-toggle {
+            background: #444;
+            color: #e0e0e0;
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .levels-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .level-card {
+                padding: 25px;
+            }
+
+            .level-icon {
+                font-size: 3em;
+            }
+
+            .level-title {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button id="theme-toggle" class="theme-toggle">🌙 Oscuro</button>
+
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Geo-Explorador Pro</h1>
+            <p>Selecciona tu nivel educativo para comenzar a explorar el mundo</p>
+        </div>
+
+        <div class="levels-grid">
+            <!-- Primaria -->
+            <div class="level-card primaria" onclick="selectLevel('primaria')">
+                <div class="level-icon">🎒</div>
+                <div class="level-title">Primaria</div>
+                <div class="level-description">Para estudiantes de primaria</div>
+                <ul class="level-features">
+                    <li>Información básica de países</li>
+                    <li>Bandera y capital</li>
+                    <li>Mapa interactivo</li>
+                </ul>
+                <button class="level-btn">Seleccionar</button>
+            </div>
+
+            <!-- Secundaria -->
+            <div class="level-card secundaria" onclick="selectLevel('secundaria')">
+                <div class="level-icon">📚</div>
+                <div class="level-title">Secundaria</div>
+                <div class="level-description">Para estudiantes de secundaria</div>
+                <ul class="level-features">
+                    <li>Información detallada de localización</li>
+                    <li>Datos demográficos y económicos</li>
+                    <li>Zonas horarias y monedas</li>
+                </ul>
+                <button class="level-btn">Seleccionar</button>
+            </div>
+
+            <!-- Universidad -->
+            <div class="level-card universidad" onclick="selectLevel('universidad')">
+                <div class="level-icon">🎓</div>
+                <div class="level-title">Universidad</div>
+                <div class="level-description">Para estudiantes universitarios</div>
+                <ul class="level-features">
+                    <li>Información completa y avanzada</li>
+                    <li>Lugares más visitados (atracciones)</li>
+                    <li>Análisis geográfico profundo</li>
+                </ul>
+                <button class="level-btn">Seleccionar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para cambiar el tema
+        function applyTheme(theme) {
+            const isDarkMode = theme === 'dark';
+            document.body.classList.toggle('dark-mode', isDarkMode);
+            document.documentElement.setAttribute('data-theme', theme);
+            const themeBtn = document.getElementById('theme-toggle');
+            if (themeBtn) {
+                themeBtn.innerHTML = isDarkMode ? '☀ Claro' : '🌙 Oscuro';
+            }
+        }
+
+        // Inicializar tema al cargar la página
+        function initTheme() {
+            const storedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(storedTheme);
+
+            const themeBtn = document.getElementById('theme-toggle');
+            if (themeBtn) {
+                themeBtn.addEventListener('click', () => {
+                    const nextTheme = document.body.classList.contains('dark-mode') ? 'light' : 'dark';
+                    localStorage.setItem('theme', nextTheme);
+                    applyTheme(nextTheme);
+                });
+            }
+        }
+
+        // Función para seleccionar un nivel educativo
+        function selectLevel(level) {
+            // Validar que sea un nivel válido
+            if (!['primaria', 'secundaria', 'universidad'].includes(level)) {
+                console.error('Nivel educativo no válido:', level);
+                return;
+            }
+
+            // Guardar el nivel en localStorage
+            localStorage.setItem('educationLevel', level);
+            console.log('Nivel educativo guardado:', level);
+
+            // Redirigir a la página principal
+            window.location.href = '/';
+        }
+
+        // Inicializar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', initTheme);
+    </script>
+</body>
+</html>

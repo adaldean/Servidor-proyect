@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌍 Mapa Mundial Educativo - Autenticación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #ddd;
+            background: white;
+            color: #666;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            border-color: #667eea;
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-btn:hover {
+            border-color: #667eea;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .form-group.active {
+            display: block;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .pin-input {
+            display: flex;
+            gap: 10px;
+            justify-content: space-between;
+        }
+
+        .pin-input input {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .grade-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .grade-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .grade-option:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .grade-option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .grade-option label {
+            margin-bottom: 0;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            display: none;
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            color: #667eea;
+            display: none;
+            margin-top: 20px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .token-display {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            word-break: break-all;
+            font-size: 11px;
+            max-height: 100px;
+            overflow-y: auto;
+            font-family: monospace;
+            display: none;
+        }
+
+        .copy-btn {
+            padding: 8px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .copy-btn:hover {
+            background: #764ba2;
+        }
+
+        @media (max-width: 500px) {
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .pin-input input {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🌍 Mapa Mundial</h1>
+            <p>Para estudiantes de primaria a preparatoria</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('registro')">📝 Registrarse</button>
+            <button class="tab-btn" onclick="switchTab('login')">🔓 Entrar</button>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO -->
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-group active">
+                <label for="regNombre">¿Cuál es tu nombre?</label>
+                <input type="text" id="regNombre" placeholder="Ej: Juan, María, Carlos..." required>
+            </div>
+
+            <div class="form-group active">
+                <label for="regPin">Elige tu PIN (4 números)</label>
+                <div class="pin-input">
+                    <input type="number" id="regPin1" min="0" max="9" placeholder="0" maxlength="1" required>
+                    <input type="number" id="regPin2" min="0" max="9" placeholder="0" maxlength="1" required>
+                    <input type="number" id="regPin3" min="0" max="9" placeholder="0" maxlength="1" required>
+                    <input type="number" id="regPin4" min="0" max="9" placeholder="0" maxlength="1" required>
+                </div>
+            </div>
+
+            <div class="form-group active">
+                <label>¿Qué curso estás?</label>
+                <div class="grade-options">
+                    <div class="grade-option">
+                        <input type="radio" id="grade1" name="grado" value="primaria_1_3" required>
+                        <label for="grade1">📚 Primaria 1-3</label>
+                    </div>
+                    <div class="grade-option">
+                        <input type="radio" id="grade2" name="grado" value="primaria_4_6">
+                        <label for="grade2">📖 Primaria 4-6</label>
+                    </div>
+                    <div class="grade-option">
+                        <input type="radio" id="grade3" name="grado" value="secundaria">
+                        <label for="grade3">📕 Secundaria</label>
+                    </div>
+                    <div class="grade-option">
+                        <input type="radio" id="grade4" name="grado" value="preparatoria">
+                        <label for="grade4">📗 Preparatoria</label>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Crear mi cuenta</button>
+        </form>
+
+        <!-- FORMULARIO DE LOGIN -->
+        <form id="loginForm" onsubmit="handleLogin(event)" style="display: none;">
+            <div class="form-group active">
+                <label for="loginNombre">Tu nombre</label>
+                <input type="text" id="loginNombre" placeholder="Ej: Juan..." required>
+            </div>
+
+            <div class="form-group active">
+                <label for="loginPin">Tu PIN (4 números)</label>
+                <div class="pin-input">
+                    <input type="number" id="loginPin1" min="0" max="9" placeholder="0" maxlength="1" required>
+                    <input type="number" id="loginPin2" min="0" max="9" placeholder="0" maxlength="1" required>
+                    <input type="number" id="loginPin3" min="0" max="9" placeholder="0" maxlength="1" required>
+                    <input type="number" id="loginPin4" min="0" max="9" placeholder="0" maxlength="1" required>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Entrar</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Procesando...</p>
+        </div>
+
+        <div class="message" id="message"></div>
+        <div class="token-display" id="tokenDisplay"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000';
+
+        function switchTab(tab) {
+            const registerForm = document.getElementById('registerForm');
+            const loginForm = document.getElementById('loginForm');
+            const tabBtns = document.querySelectorAll('.tab-btn');
+
+            if (tab === 'registro') {
+                registerForm.style.display = 'block';
+                loginForm.style.display = 'none';
+                tabBtns[0].classList.add('active');
+                tabBtns[1].classList.remove('active');
+            } else {
+                registerForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                tabBtns[0].classList.remove('active');
+                tabBtns[1].classList.add('active');
+            }
+        }
+
+        function getPinValue(prefix) {
+            const pin1 = document.getElementById(`${prefix}Pin1`).value;
+            const pin2 = document.getElementById(`${prefix}Pin2`).value;
+            const pin3 = document.getElementById(`${prefix}Pin3`).value;
+            const pin4 = document.getElementById(`${prefix}Pin4`).value;
+            return pin1 + pin2 + pin3 + pin4;
+        }
+
+        function showMessage(text, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = text;
+            msgDiv.className = `message ${type}`;
+        }
+
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+        }
+
+        function showToken(token, usuario) {
+            const display = document.getElementById('tokenDisplay');
+            display.innerHTML = `
+                <strong>✅ ¡Bienvenido ${usuario.nombre}! (${usuario.grado})</strong><br><br>
+                <strong>Tu token:</strong><br>
+                ${token}<br><br>
+                <button class="copy-btn" onclick="copyToClipboard('${token}')">📋 Copiar token</button>
+            `;
+            display.style.display = 'block';
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Token copiado al portapapeles');
+            });
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            showLoading(true);
+
+            const nombre = document.getElementById('regNombre').value;
+            const pin = getPinValue('reg');
+            const grado = document.querySelector('input[name="grado"]:checked').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, pin, grado })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(`✅ ¡Bienvenido ${data.usuario.nombre}!`, 'success');
+                    showToken(data.access_token, data.usuario);
+                    document.getElementById('registerForm').reset();
+                } else {
+                    showMessage(`❌ ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error de conexión al servidor', 'error');
+                console.error(error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            showLoading(true);
+
+            const nombre = document.getElementById('loginNombre').value;
+            const pin = getPinValue('login');
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, pin })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showMessage(`✅ ¡Bienvenido de vuelta ${data.usuario.nombre}!`, 'success');
+                    showToken(data.access_token, data.usuario);
+                    document.getElementById('loginForm').reset();
+                } else {
+                    showMessage(`❌ ${data.detail}`, 'error');
+                }
+            } catch (error) {
+                showMessage('❌ Error de conexión al servidor', 'error');
+                console.error(error);
+            } finally {
+                showLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>
