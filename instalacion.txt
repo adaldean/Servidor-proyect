@@ -1,0 +1,186 @@
+# 🌎 Atlas Escolar - Instalación Completa
+
+## 📦 Requisitos
+
+Antes de ejecutar el proyecto deben tener instalado:
+
+- Python 3.10 o superior
+- PostgreSQL
+- Git
+
+---
+
+# 🚀 PASO 1 - Crear entorno virtual
+
+## Windows
+
+```bash
+python -m venv venv
+venv\Scripts\activate
+```
+
+## Linux/macOS
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+---
+
+# 🚀 PASO 2 - Instalar dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 🚀 PASO 3 - Crear base de datos
+
+Abrir PostgreSQL:
+
+```bash
+psql -U postgres
+```
+
+Crear la base:
+
+```sql
+CREATE DATABASE countries_db;
+```
+
+Salir:
+
+```sql
+\q
+```
+
+---
+
+# 🚀 PASO 4 - Restaurar backup SQL
+
+Ubicarse en la carpeta del proyecto y ejecutar:
+
+```bash
+psql -U postgres -d countries_db -f countries_db_backup.sql
+```
+
+⚠️ IMPORTANTE:
+
+El archivo:
+
+```text
+countries_db_backup.sql
+```
+
+debe existir en la carpeta raíz del proyecto.
+
+---
+
+# 🚀 PASO 5 - Configurar archivo .env
+
+Crear un archivo llamado:
+
+```text
+.env
+```
+
+Y pegar:
+
+```env
+DATABASE_URL=postgresql://postgres:TU_PASSWORD@localhost:5432/countries_db
+HOST=0.0.0.0
+PORT=8000
+ORIGEN_PERMITIDO=http://127.0.0.1:5500
+INEGI_TOKEN=TU_TOKEN_INEGI  ---ESTO ES IMPORTANTE.----
+API_KEY=atlas_secure_key
+```
+
+⚠️ IMPORTANTE:
+
+Cambiar:
+
+```text
+TU_PASSWORD
+```
+
+por la contraseña de PostgreSQL.
+
+---
+
+# 🚀 PASO 6 - Ejecutar backend
+
+Ejecutar:
+
+```bash
+uvicorn main:app --reload
+```
+
+Si todo salió correctamente aparecerá:
+
+```text
+✅ DB conectada
+✅ Tablas listas
+```
+
+---
+
+# 🚀 PASO 7 - Abrir proyecto
+
+Abrir en navegador:
+
+```text
+http://127.0.0.1:8000
+```
+
+---
+
+# 🔥 Posibles errores
+
+## Error:
+
+```text
+ModuleNotFoundError
+```
+
+Solución:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## Error:
+
+```text
+password authentication failed
+```
+
+Verificar:
+
+```env
+DATABASE_URL
+```
+
+---
+
+## Error:
+
+```text
+❌ DATABASE_URL no está definido
+```
+
+Verificar que exista el archivo:
+
+```text
+.env
+```
+
+---
+
+# 👨‍💻 Proyecto
+
+Atlas Escolar API  
+FastAPI + PostgreSQL + INEGI API
