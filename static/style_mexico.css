@@ -1,0 +1,65 @@
+body {
+    margin: 0;
+    display: flex;
+    height: 100vh;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f9;
+}
+#map { flex: 1; }
+
+#sidebar {
+    width: 350px;
+    background: #ffffff;
+    color: #333;
+    padding: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+}
+#sidebar h2 {
+    color: #0078d7;
+    margin-bottom: 15px;
+}
+button {
+    display: block;
+    width: 100%;
+    margin: 8px 0;
+    padding: 10px;
+    border: none;
+    background: #0078d7;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background: #005fa3;
+}
+.info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #eef3f7;
+    border-radius: 8px;
+}
+.info h3 {
+    margin: 0 0 15px 0;
+    color: #0078d7;
+}
+.info-item {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #d1d9e6;
+    padding-bottom: 5px;
+}
+.info-item label {
+    display: block;
+    font-weight: bold;
+    font-size: 0.8em;
+    color: #666;
+    text-transform: uppercase;
+}
+
+#escudo-container img {
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+    transition: transform 0.3s ease;
+}
+#escudo-container img:hover {
+    transform: scale(1.05);
+}

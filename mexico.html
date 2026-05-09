@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Atlas de México PRO</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link rel="stylesheet" href="/static/style_mexico.css">
+</head>
+<body>
+<div id="sidebar">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h2>Atlas México</h2>
+        <button onclick="handleLogout()" style="background:#f44336; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer;">Salir</button>
+    </div>
+    <button id="btnEstados" class="primary-btn">Explorar Estados</button>
+    <div class="info">
+        <div id="escudo-container" style="text-align: center; margin-bottom: 15px;">
+            <img id="escudo" src="" alt="Escudo del estado" style="max-height: 120px; max-width: 100%; display:none;">
+        </div>
+        <h3 id="nombre">Selecciona un estado</h3>
+        
+        <div class="info-item">
+            <label>Capital</label>
+            <span id="capital">--</span>
+        </div>
+        <div class="info-item">
+            <label>Población (Censo)</label>
+            <span id="poblacion">--</span> (<span id="anio">--</span>)
+        </div>
+        <div class="info-item">
+            <label>Región</label>
+            <span id="region">--</span>
+        </div>
+        <div class="info-item">
+            <label>Clima</label>
+            <span id="clima">--</span>
+        </div>
+        <div class="info-item">
+            <label>Platillo Típico</label>
+            <span id="platillo">--</span>
+        </div>
+        <div class="info-item">
+            <label>Fiesta Popular</label>
+            <span id="fiesta">--</span>
+        </div>
+        <div class="info-item">
+            <label>¿Sabías que...?</label>
+            <span id="curiosidad">--</span>
+        </div>
+
+        <!-- Historial de población para vista PRO -->
+        <div id="historial-poblacion" style="margin-top: 15px; font-size: 0.85em; color: #555;"></div>
+
+        <!-- Nueva sección de municipios para Nivel Principiante -->
+        <div id="municipios-section" style="margin-top: 20px; border-top: 1px solid #ddd; padding-top: 15px;">
+            <h4>🏘️ Municipios</h4>
+            <p style="font-size: 0.8em; color: #666;">Haz clic en un estado para ver sus municipios principales.</p>
+            <div id="lista-municipios" style="max-height: 150px; overflow-y: auto; background: #f9f9f9; padding: 10px; border-radius: 5px; font-size: 0.9em;">
+                <em style="color: #999;">Ningún estado seleccionado</em>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="map"></div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    function handleLogout() {
+        localStorage.clear();
+        window.location.href = '/';
+    }
+    if (!localStorage.getItem('token')) window.location.href = '/';
+</script>
+<script src="/static/script_mexico.js" defer></script>
+</body>
+</html>

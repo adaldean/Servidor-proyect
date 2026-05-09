@@ -4,202 +4,198 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Geo-Explorador Pro</title>
+
     <script>
         (function () {
             var theme = localStorage.getItem('theme') || 'light';
             document.documentElement.setAttribute('data-theme', theme);
         })();
     </script>
+
     <link rel="stylesheet" href="/static/style_p.css">
-    <style>
-        .level-indicator {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.9em;
-            margin-bottom: 15px;
-        }
-
-        .level-indicator.primaria {
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
-        }
-
-        .level-indicator.secundaria {
-            background: linear-gradient(135deg, #2196F3 0%, #0b7dda 100%);
-        }
-
-        .level-indicator.universidad {
-            background: linear-gradient(135deg, #FF9800 0%, #e68900 100%);
-        }
-
-        .change-level-btn {
-            background: #ddd;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-            font-size: 0.85em;
-            margin-left: 10px;
-        }
-
-        .change-level-btn:hover {
-            background: #ccc;
-            transform: scale(1.05);
-        }
-
-        .title-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-    </style>
-<script src="/static/level-manager.js"></script>
-<script src="/static/script_p.js" defer></script>
-
+    <script src="/static/level-manager.js"></script>
+    <script src="/static/script_p.js" defer></script>
 </head>
+
 <body>
 <div class="app">
+
+    <!-- SIDEBAR -->
     <aside class="sidebar">
         <h3>Información</h3>
-        
-        <!-- Indicador de nivel educativo -->
-        <div id="level-badge" class="level-indicator primaria" style="justify-content: space-between;">
-            <span>🎒 Primaria</span>
-            <button class="change-level-btn" onclick="changeEducationLevel()" title="Cambiar nivel">Cambiar</button>
-        </div>
 
         <div class="item">
             <div class="label" id="fav-header" style="cursor:pointer;">Favoritos ▾</div>
             <div id="favorites-list" class="favorites-list">
                 <div class="empty">No hay favoritos</div>
             </div>
-            <button id="open-favs-page" class="open-favs-btn" style="display:none">Ver países favoritos</button>
+            <button id="open-favs-page" class="open-favs-btn" style="display:none">
+                Ver países favoritos
+            </button>
         </div>
+
         <div class="item">
             <div class="label">Continente</div>
             <div id="continent">—</div>
         </div>
+
         <div class="item">
             <div class="label">Población</div>
             <div id="population">—</div>
         </div>
+
         <div class="item">
             <div class="label">Idiomas</div>
             <div id="languages">—</div>
         </div>
+
+        <div class="item" style="margin-top: auto; padding-top: 20px;">
+            <button onclick="handleLogout()" 
+                class="change-level-btn"
+                style="width: 100%; background: #f44336; color: white; border-radius: 8px;">
+                🚪 Cerrar Sesión
+            </button>
+        </div>
     </aside>
 
+    <!-- MAIN -->
     <main class="card">
         <div class="title-row">
             <h2>Explorador del Mundo</h2>
-            <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Cambiar tema">Tema</button>
+            <button id="theme-toggle" class="theme-toggle">Tema</button>
         </div>
+
         <p id="loader">Cargando base de datos...</p>
-        
+
         <div style="display:flex;gap:8px;align-items:center;">
             <select id="country-select" style="display:none;flex:1"></select>
-            <button id="fav-btn" class="fav-btn" title="Marcar como favorito" disabled>☆ Favorito</button>
+            <button id="fav-btn" class="fav-btn" disabled>☆ Favorito</button>
         </div>
 
         <div id="info-panel" class="result-grid">
             <div class="flag-box">
                 <img id="flag" src="" alt="Bandera">
             </div>
+
             <h1 id="name" class="country-name"></h1>
             <div id="currency" class="badge"></div>
-            
+
             <div class="map-container">
-                <iframe id="map-frame" src="" title="Mapa del país seleccionado"></iframe>
+                <iframe id="map-frame" src="" title="Mapa"></iframe>
             </div>
         </div>
 
-        <!-- Información adicional para Secundaria y Universidad -->
-        <div id="extended-info" style="display: none; margin-top: 30px;">
+        <!-- INFO AVANZADA -->
+        <div id="extended-info" style="display:none; margin-top:30px;">
             <h3>Información Adicional</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                <div id="subregion-card" style="background: #f5f5f5; padding: 15px; border-radius: 10px; display: none;">
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:15px;">
+
+                <div id="subregion-card" style="display:none;">
                     <h4>📍 Subregión</h4>
                     <p id="subregion">—</p>
                 </div>
-                <div id="area-card" style="background: #f5f5f5; padding: 15px; border-radius: 10px; display: none;">
-                    <h4>📏 Área Territorial</h4>
+
+                <div id="area-card" style="display:none;">
+                    <h4>📏 Área</h4>
                     <p id="area">—</p>
                 </div>
-                <div id="currencies-card" style="background: #f5f5f5; padding: 15px; border-radius: 10px; display: none;">
+
+                <div id="currencies-card" style="display:none;">
                     <h4>💰 Monedas</h4>
                     <p id="currencies-full">—</p>
                 </div>
-                <div id="timezone-card" style="background: #f5f5f5; padding: 15px; border-radius: 10px; display: none;">
+
+                <div id="timezone-card" style="display:none;">
                     <h4>🕐 Zona Horaria</h4>
                     <p id="timezone">—</p>
                 </div>
-                <div id="density-card" style="background: #f5f5f5; padding: 15px; border-radius: 10px; display: none;">
-                    <h4>👥 Densidad de Población</h4>
+
+                <div id="density-card" style="display:none;">
+                    <h4>👥 Densidad</h4>
                     <p id="density">—</p>
                 </div>
-                <div id="development-card" style="background: #f5f5f5; padding: 15px; border-radius: 10px; display: none;">
-                    <h4>📈 Nivel de Desarrollo</h4>
+
+                <div id="development-card" style="display:none;">
+                    <h4>📈 Desarrollo</h4>
                     <p id="development">—</p>
                 </div>
+
             </div>
         </div>
 
-        <!-- Atracciones turísticas para Universidad -->
-        <div id="attractions-section" style="display: none; margin-top: 30px;">
-            <h3>🏛️ Lugares Más Visitados</h3>
-            <div id="attractions-container" style="display: flex; flex-wrap: wrap; gap: 10px;"></div>
+        <!-- ATRACCIONES -->
+        <div id="attractions-section" style="display:none; margin-top:30px;">
+            <h3>🏛️ Lugares turísticos</h3>
+            <div id="attractions-container"></div>
         </div>
     </main>
 </div>
 
+<!-- SCRIPT -->
 <script>
-    /**
-     * Función para cambiar el nivel educativo
-     */
-    function changeEducationLevel() {
-        window.location.href = '/niveles';
+function changeEducationLevel() {
+    window.location.href = '/'; // puedes cambiar a selector después
+}
+
+function handleLogout() {
+    localStorage.clear();
+    window.location.href = '/'; // ✅ FIX correcto
+}
+
+function updateUIByLevel() {
+    const level = localStorage.getItem('educationLevel') || 'primaria';
+
+    const texts = {
+        primaria: '🎒 Primaria',
+        secundaria: '📚 Secundaria',
+        universidad: '🎓 Universidad'
+    };
+
+    const badge = document.getElementById('level-badge');
+    badge.className = 'level-indicator ' + level;
+
+    badge.innerHTML = `
+        <span>${texts[level]}</span>
+        <button class="change-level-btn" onclick="changeEducationLevel()">Cambiar</button>
+    `;
+
+    // 🔥 mostrar info según nivel
+    if (level === 'secundaria' || level === 'universidad') {
+        document.getElementById('extended-info').style.display = 'block';
     }
 
-    /**
-     * Actualiza la interfaz según el nivel educativo actual
-     */
-    function updateUIByLevel() {
-        const level = levelManager.getLevel();
-        const levelTexts = {
-            'primaria': '🎒 Primaria',
-            'secundaria': '📚 Secundaria',
-            'universidad': '🎓 Universidad'
-        };
+    if (level === 'universidad') {
+        document.getElementById('attractions-section').style.display = 'block';
+    }
+}
 
-        // Actualizar insignia de nivel
-        const badge = document.getElementById('level-badge');
-        badge.className = 'level-indicator ' + level;
-        badge.innerHTML = `
-            <span>${levelTexts[level]}</span>
-            <button class="change-level-btn" onclick="changeEducationLevel()" title="Cambiar nivel">Cambiar</button>
-        `;
+document.addEventListener('DOMContentLoaded', () => {
+
+    const token = localStorage.getItem('token');
+
+    // ✅ FIX redirección correcta
+    if (!token) {
+        window.location.href = '/';
+        return;
     }
 
-    // Actualizar interfaz cuando se carga la página
-    document.addEventListener('DOMContentLoaded', function() {
-        updateUIByLevel();
-    });
+    // 🔥 MAPEO DE NIVELES
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
 
-    // Escuchar cambios de nivel
-    window.addEventListener('storage', function(e) {
-        if (e.key === 'educationLevel') {
-            updateUIByLevel();
-        }
-    });
+    const map = {
+        "principiante": "primaria",
+        "medio": "primaria",
+        "secundaria": "secundaria"
+    };
+
+    if (user.grado) {
+        const level = map[user.grado] || "primaria";
+        localStorage.setItem('educationLevel', level);
+    }
+
+    updateUIByLevel();
+});
 </script>
 
 </body>

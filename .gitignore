@@ -1,0 +1,12 @@
+# 🔐 Seguridad
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Entorno virtual
+.venv/
+
+# Base de datos local
+*.sqlite3
